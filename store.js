@@ -65,5 +65,5 @@ let movies = {
   },
   // etc
 }
-
+//changes
 console.log(statement(customer, movies))
