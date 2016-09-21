@@ -1,15 +1,37 @@
 "use strict";
 
-function statement(customer, movies) {
-  let result = `Rental Record for ${customer.name}\n`;
-  for (let rental of customer.rentals) {
-    result += `\t${getMovie(rental).title}\t${getThisAmount(rental)}\n`;
+function statement(customer, movies, type) {
+  if(type == 'text'){
+    return statementText();
   }
-  // add footer lines
-  result += `Amount owed is ${getTotalAmount(customer)}\n`;
-  result += `You earned ${getTotalRenterPoints(customer)} frequent renter points\n`;
+  if(type == 'html'){
+    return statementHtml();
+  }
+  function statementText(){
+    let result = `Rental Record for ${customer.name}\n`;
+    for (let rental of customer.rentals) {
+      result += `\t${getMovie(rental).title}\t${getThisAmount(rental)}\n`;
+    }
+    // add footer lines
+    result += `Amount owed is ${getTotalAmount(customer)}\n`;
+    result += `You earned ${getTotalRenterPoints(customer)} frequent renter points\n`;
 
-  return result;
+    return result;
+  }
+  function statementHtml(){
+    let result = `<h1>Rental Record for ${customer.name}</h1>\n`;
+    result += '<table>\n';
+    for (let rental of customer.rentals) {
+      result += `<tr><td>${getMovie(rental).title}</td><td>${getThisAmount(rental)}</td></tr>\n`;
+    }
+    result += '</table>\n';
+    // add footer lines
+    result += `<p>Amount owed is <em>${getTotalAmount(customer)}</em></p>\n`;
+    result += `<p>You earned <em>${getTotalRenterPoints(customer)}</em> frequent renter points</p>\n`;
+
+    return result;
+  }
+
 
   function getTotalAmount(customer) {
     let totalAmount = 0;
@@ -83,4 +105,5 @@ let movies = {
   // etc
 };
 
-console.log(statement(customer, movies));
+console.log(statement(customer, movies, 'text'));
+console.log(statement(customer, movies, 'html'));
