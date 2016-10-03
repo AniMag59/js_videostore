@@ -20,7 +20,8 @@ function Rental(rental, movies) {
     movieID: rental.movieID,
     days: rental.days,
     movie: getMovie,
-    renterPoints: getRenterPoints
+    renterPoints: getRenterPoints,
+    thisAmount: getThisAmount
   };
   function getMovie() {
     return movies[rental.movieID];
@@ -33,30 +34,9 @@ function Rental(rental, movies) {
       return 1;
     }
   }
-}
-
-
-function statement(customer, movies) {
-  customer = new Customer(customer, movies);
-  let result = `Rental Record for ${customer.name}\n`;
-  for (let rental of customer.rentals) {
-    result += `\t${rental.movie().title}\t${getThisAmount(rental)}\n`;
-  }
-  // add footer lines
-  result += `Amount owed is ${getTotalAmount(customer)}\n`;
-  result += `You earned ${customer.totalRenterPoints()} frequent renter points\n`;
-  return result;
-
-  function getTotalAmount(customer) {
-    let totalAmount = 0;
-    for (let rental of customer.rentals) {
-      totalAmount += getThisAmount(rental);
-    }
-    return totalAmount;
-  }
-  function getThisAmount(rental){
+  function getThisAmount(){
     let thisAmount;
-    switch (rental.movie().code) {
+    switch (this.movie().code) {
       case "regular":
         thisAmount = 2;
         if (rental.days > 2) {
@@ -74,6 +54,27 @@ function statement(customer, movies) {
         break;
     }
     return thisAmount;
+  }
+}
+
+
+function statement(customer, movies) {
+  customer = new Customer(customer, movies);
+  let result = `Rental Record for ${customer.name}\n`;
+  for (let rental of customer.rentals) {
+    result += `\t${rental.movie().title}\t${rental.thisAmount()}\n`;
+  }
+  // add footer lines
+  result += `Amount owed is ${getTotalAmount(customer)}\n`;
+  result += `You earned ${customer.totalRenterPoints()} frequent renter points\n`;
+  return result;
+
+  function getTotalAmount(customer) {
+    let totalAmount = 0;
+    for (let rental of customer.rentals) {
+      totalAmount += rental.thisAmount();
+    }
+    return totalAmount;
   }
 
 }
