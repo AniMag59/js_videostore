@@ -3,11 +3,18 @@
 function Customer(customer) {
   return{
     name: customer.name,
-    rentals: customer.rentals,
+    rentals: customer.rentals.map(rental => new Rental(rental)),
     amount: "",
     renterPoints: ""
   };
 }
+function Rental(rental) {
+  return{
+    movieID: rental.movieID,
+    days: rental.days
+  }
+}
+
 
 function statement(customer, movies) {
   customer = new Customer(customer);
