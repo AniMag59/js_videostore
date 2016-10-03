@@ -4,18 +4,27 @@ function Customer(customer, movies) {
   return{
     name: customer.name,
     rentals: customer.rentals.map(rental => new Rental(rental, movies)),
-    amount: "",
-    renterPoints: ""
+   // amount: "",
+    //renterPoints: ""
   };
 }
 function Rental(rental, movies) {
   return{
     movieID: rental.movieID,
     days: rental.days,
-    movie: getMovie
+    movie: getMovie,
+    renterPoints: getRenterPoints
   };
   function getMovie() {
     return movies[rental.movieID];
+  }
+  function getRenterPoints() {
+    if (this.movie().code === "new" && rental.days > 2) {
+      return 2;
+    }
+    else{
+      return 1;
+    }
   }
 }
 
@@ -63,17 +72,9 @@ function statement(customer, movies) {
   function getTotalRenterPoints(customer) {
     let TotalRenterPoints = 0;
     for (let rental of customer.rentals) {
-      TotalRenterPoints += getRenterPoints(rental);
+      TotalRenterPoints += rental.renterPoints();
     }
     return TotalRenterPoints;
-  }
-  function getRenterPoints(rental) {
-    if (rental.movie().code === "new" && rental.days > 2) {
-      return 2;
-    }
-    else{
-      return 1;
-    }
   }
 
 }
