@@ -4,7 +4,7 @@ function Customer(customer, movies) {
   return{
     name: customer.name,
     rentals: customer.rentals.map(rental => new Rental(rental, movies)),
-   // amount: "",
+    totalAmount: getTotalAmount,
     totalRenterPoints: getTotalRenterPoints
   };
   function getTotalRenterPoints() {
@@ -13,6 +13,13 @@ function Customer(customer, movies) {
       TotalRenterPoints += rental.renterPoints();
     }
     return TotalRenterPoints;
+  }
+  function getTotalAmount() {
+    let totalAmount = 0;
+    for (let rental of this.rentals) {
+      totalAmount += rental.thisAmount();
+    }
+    return totalAmount;
   }
 }
 function Rental(rental, movies) {
@@ -65,18 +72,9 @@ function statement(customer, movies) {
     result += `\t${rental.movie().title}\t${rental.thisAmount()}\n`;
   }
   // add footer lines
-  result += `Amount owed is ${getTotalAmount(customer)}\n`;
+  result += `Amount owed is ${customer.totalAmount()}\n`;
   result += `You earned ${customer.totalRenterPoints()} frequent renter points\n`;
   return result;
-
-  function getTotalAmount(customer) {
-    let totalAmount = 0;
-    for (let rental of customer.rentals) {
-      totalAmount += rental.thisAmount();
-    }
-    return totalAmount;
-  }
-
 }
 
 let customer = {
