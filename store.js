@@ -1,23 +1,27 @@
 "use strict";
 
-function Customer(customer) {
+function Customer(customer, movies) {
   return{
     name: customer.name,
-    rentals: customer.rentals.map(rental => new Rental(rental)),
+    rentals: customer.rentals.map(rental => new Rental(rental, movies)),
     amount: "",
     renterPoints: ""
   };
 }
-function Rental(rental) {
+function Rental(rental, movies) {
   return{
     movieID: rental.movieID,
-    days: rental.days
+    days: rental.days,
+    movie: getMovie
+  };
+  function getMovie() {
+    return movies[rental.movieID];
   }
 }
 
 
 function statement(customer, movies) {
-  customer = new Customer(customer);
+  customer = new Customer(customer, movies);
   let result = `Rental Record for ${customer.name}\n`;
   for (let rental of customer.rentals) {
     result += `\t${getMovie(rental).title}\t${getThisAmount(rental)}\n`;
@@ -72,7 +76,8 @@ function statement(customer, movies) {
     }
   }
   function getMovie(rental) {
-    return movies[rental.movieID];
+    return rental.movie();
+    //return movies[rental.movieID];
   }
 
 }
