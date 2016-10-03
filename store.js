@@ -76,6 +76,20 @@ function statement(customer, movies) {
   result += `You earned ${customer.totalRenterPoints()} frequent renter points\n`;
   return result;
 }
+function statementHtml(customer, movies) {
+  customer = new Customer(customer, movies);
+  let result = `<h1>Rental Record for ${customer.name}</h1>\n`;
+  result += '<table>\n';
+  for (let rental of customer.rentals) {
+    result += `<tr><td>${rental.movie().title}</td><td>${rental.thisAmount()}</td></tr>\n`;
+  }
+  result += '</table>\n';
+  // add footer lines
+  result += `<p>Amount owed is <em>${customer.totalAmount()}</em></p>\n`;
+  result += `<p>You earned <em>${customer.totalRenterPoints()}</em> frequent renter points</p>\n`;
+
+  return result;
+}
 
 let customer = {
   name: "martin",
@@ -101,4 +115,5 @@ let movies = {
 };
 
 console.log(statement(customer, movies));
+console.log(statementHtml(customer, movies));
 
